@@ -1,7 +1,27 @@
-from fastapi import FastAPI, Request, Path
+from fastapi import FastAPI, Request, Path, HTTPException
 from typing import Annotated
+from app.routes import todo                 # app ke andr routes package tha, uske andr todo file thi
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+
 
 app = FastAPI()
+
+app.include_router(todo.router)             # Telling our app that we've created routes there
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    errors = {}
+
+    for error in exc.errors():
+        print(error)
+        errors[error['loc'][-1]] = error['msg']
+
+    return JSONResponse(
+        {"Message": "Validation Error", "errors":errors}, status_code=422 
+    )
+
+
 
 # @app.get('/')
 # def root():
