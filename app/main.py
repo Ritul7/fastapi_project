@@ -4,6 +4,7 @@ from app.routes import todo                 # app ke andr routes package tha, us
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
+from app.config.app_config import getAppConfig
 import os
 
 
@@ -27,15 +28,26 @@ async def validation_exception_handler(request, exc):
     )
 
 
-
 @app.get('/')
 def root():
+    config = getAppConfig()
     return {
-        "Message": "Everything is running",
-        "App name": os.getenv("APP_NAME")
+
+        "app_name": config.app_name,
+        "app_env": config.app_env,
+        "database_url": config.database_url
+
     }
 
-# @app.get('/')
+
+# @app.get('/')                             # Without config folder
+# def root():
+#     # return {
+#     #     "Message": "Everything is running",
+#     #     "App name": os.getenv("APP_NAME")
+#     # }
+
+# @app.get('/')                             # API endpoint for handling query parameters
 # def get_name(request: Request):
 #     params = request.query_params
 #     return {"Message": params }

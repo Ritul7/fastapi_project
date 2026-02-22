@@ -3,7 +3,7 @@ from datetime import timezone, datetime
 
 from ..db import Base
 
-class TodoSchema(Base):
+class TodoSchema(Base):             # Base tells SQLAlchemy, this class represents a database table
 
     __tablename__ = "todos"
 
